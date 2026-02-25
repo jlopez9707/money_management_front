@@ -20,9 +20,11 @@ import { LoaderCircle } from "lucide-react";
 import toast from "react-hot-toast";
 import { AuthFormProps } from "./AuthForm";
 import { signup } from "@/actions/auth/auth";
+import { useRouter } from "next/navigation";
 
 const SignUpForm = ({ setTypeSelected }: AuthFormProps) => {
 
+    const router = useRouter();
     const [isLoading, setisLoading] = useState<boolean>(false)
 
     // ============ Form ============
@@ -61,11 +63,11 @@ const SignUpForm = ({ setTypeSelected }: AuthFormProps) => {
             const res = await signup(user);
 
             if (res.success) {
-                toast.success(`Hola ${user.name}, te hemos enviado un correo de verificación para confirmar tu registro`, {
+                toast.success(`Cuenta creada correctamente`, {
                     duration: 4000,
                     icon: '👋🏻'
                 });
-                setTypeSelected('sign-in');
+                router.push('/dashboard');
                 form.reset();
             } else {
                 toast.error(res.message, { duration: 4000 });

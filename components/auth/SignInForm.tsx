@@ -20,10 +20,11 @@ import { LoaderCircle } from "lucide-react";
 import toast from "react-hot-toast";
 import { AuthFormProps } from "./AuthForm";
 import { login } from "@/actions/auth/auth";
-
+import { useRouter } from "next/navigation";
 
 const SignInForm = ({ setTypeSelected }: AuthFormProps) => {
 
+    const router = useRouter();
     const [isLoading, setisLoading] = useState<boolean>(false)
 
     // ============ Form ============
@@ -55,7 +56,7 @@ const SignInForm = ({ setTypeSelected }: AuthFormProps) => {
 
             if (res.success) {
                 toast.success('Sesión iniciada correctamente', { duration: 2500 });
-                // Aquí podrías redireccionar si es necesario
+                router.push('/dashboard');
             } else {
                 const errorMessage = res.message;
                 if (errorMessage.toLowerCase().includes('invalid login credentials')) {
