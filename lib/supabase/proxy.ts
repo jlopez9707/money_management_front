@@ -1,3 +1,4 @@
+import { getUser } from '@/actions/auth/get-user'
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
@@ -28,7 +29,23 @@ export async function updateSession(request: NextRequest) {
   )
 
   // refreshing the auth token
-  await supabase.auth.getUser()
+  const user = await getUser();
+
+  const protectedRoutes = [
+    '/dashboard',
+    '/profile',
+    '/update-password'
+  ]
+
+  // if user is not logged in and is trying to access a protected route, redirect to login
+  if(!user && protectedRoutes.includes(request.nextUrl.pathname)){
+    return NextResponse.redirect(new URL('/', request.url))
+  }
+
+  // if user is logged in and is trying to access the login page, redirect to dashboard
+  if(user && request.nextUrl.pathname === '/'){
+    return NextResponse.redirect(new URL('/dashboard', request.url))
+  }
 
   return supabaseResponse
 }
